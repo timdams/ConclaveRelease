@@ -44,14 +44,9 @@ Bij het openen van een nieuwe werkmap detecteert de tool het type en stelt het j
 - **.NET 10 SDK** — [download](https://dotnet.microsoft.com/download/dotnet/10.0)
 - Minstens één API-key voor een LLM-provider (zie hieronder)
 
-### Bouwen
+### Installeren
 
-```powershell
-git clone <repo-url>
-cd Conclave
-dotnet build Conclave.sln -c Release
-dotnet run --project src/Conclave.App
-```
+Via [releases](https://github.com/timdams/ConclaveRelease) kan je de recentste versie binnenhalen. Updates in de toekomst worden automatisch geinstalleerd.
 
 ### API-keys configureren
 
