@@ -197,15 +197,9 @@ Alles markdown / JSON op disk. Leesbaar zonder de tool. Git-baar. Grep-baar.
 2. **Geen AI bepaalt het bindende eindoordeel.** De council geeft advies; jij beslist.
 3. **Pseudonimisering vóór elke API-call.**
 4. **Markdown is de waarheid.** Alle resultaten leesbaar zonder de tool.
-5. **API-keys nooit in git.**
 
 ---
 
-## Meer weten?
-
-- **Architectuur & ontwerpkeuzes**: [docs/architectuur.md](docs/architectuur.md)
-- **Project-instructies voor bijdragers**: [CLAUDE.md](CLAUDE.md)
-- **Roadmap & openstaande punten**: [TODOnext.md](TODOnext.md)
 
 ---
 
