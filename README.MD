@@ -145,8 +145,7 @@ Drie stages, met automatische skip-logica om kosten te besparen.
 ## Privacy & veiligheid
 
 - **Pseudonimisering**: studentnamen worden vervangen via `_conclave/students.json` vóór elke API-call. De UI toont gewoon de echte naam.
-- **API-keys**: nooit in git — ofwel via App-instellingen (`%APPDATA%`), ofwel via `appsettings.local.json` (gitignored).
-- **Lokaal**: alle tool-data leeft op disk. Niets gaat naar een cloud die wij beheren. Wat naar OpenAI / Anthropic / OpenRouter gaat is uitsluitend de gepseudonimiseerde prompt op het moment van de call.
+- **Lokaal**: alle tool-data leeft op disk. Niets gaat naar de cloud. Wat naar OpenAI / Anthropic / OpenRouter gaat is uitsluitend de gepseudonimiseerde prompt op het moment van de call.
 - **Logbestanden** (`_conclave/analyses/<student>/log.jsonl`) bevatten alleen tokens/kost/latency — geen prompts of responses. Volledige prompts en responses staan in `transcripts/`-folder, leesbaar zonder de tool.
 
 ---
