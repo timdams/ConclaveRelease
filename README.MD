@@ -7,7 +7,7 @@ WPF desktop tool for Windows. You are the chairman; the AIs offer advice.
 
 ![](main.jpg)
 
-**⚠️IMPORTANT: you need a openrouter.com api for this to work. The free models from openrputer can be used to test but will generally NOT SUFFICE to do any meaningfull grading assitance.**
+**⚠️IMPORTANT: you need an [openrouter.com](openrouter.com) api key for this to work. The free models from openrouter can be used to test but will generally NOT SUFFICE to do any meaningfull grading assitance. The tool will tell you the estimated cost for a given combination of models (so you it burn tokens without you knowing 😉)**
 
 ---
 
