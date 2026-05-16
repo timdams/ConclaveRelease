@@ -1,218 +1,219 @@
 # Conclave
 
-**Een council van LLM's die je helpt bij het beoordelen van programmeer- en schrijfopdrachten.**
-WPF-desktoptool voor Windows. Jij bent chairman, de AI's geven advies — het eindoordeel ligt altijd bij jou.
+**A council of LLMs that helps you grade programming and writing assignments.**
+WPF desktop tool for Windows. You are the chairman; the AIs offer advice.
 
-> *Een conclave is een afgesloten ruimte waar raadgevers beraadslagen tot er witte rook is. De raad geeft advies — de eindbeslissing ligt bij één persoon.*
+> *A conclave is a closed room where advisors deliberate until there is white smoke. The council advises — the final decision rests with one person.*
 
 ![](main.jpg)
 
+**⚠️IMPORTANT: you need a openrouter.com api for this to work. The free models from openrputer can be used to test but will generally NOT SUFFICE to do any meaningfull grading assitance.**
+
 ---
 
-## Wat doet deze tool?
+## What does this tool do?
 
-Je hebt een stapel van 50 student-folders met dezelfde opdracht. Conclave laat 2 à 3 LLM's onafhankelijk elke inzending lezen, vergelijkt hun oordelen, en geeft jou een dashboard waar je per student in seconden ziet:
+You have a stack of 50 student folders with the same assignment. Conclave lets 2 to 3 LLMs independently read each submission, compares their judgments, and gives you a dashboard where per student you see in seconds:
 
-- 📊 **Voorgesteld cijfer** per AI + gewogen Camerlengo-advies
-- 🔥⚪ **Witte rook** wanneer alle AI's het eens zijn — kandidaat voor snelle accept
-- 🔥⚫ **Zwarte rook** wanneer ze van mening verschillen — daar moet jij naar kijken
-- 🚩 **Rode vlaggen** met klikbare code-snippets die je naar de juiste regel brengen
-- 🤖 **AI-vermoeden** wanneer iets verdacht naar Copilot ruikt
-- 📁 **Diff** tegen je modeloplossing per bestand
+- 📊 **Proposed grade** per AI + weighted Camerlengo advice
+- 🔥⚪ **White smoke** when all AIs agree — candidate for a quick accept
+- 🔥⚫ **Black smoke** when they disagree — that's where you need to look
+- 🚩 **Red flags** with clickable code snippets that jump to the right line
+- 🤖 **AI suspicion** when something smells suspiciously like Copilot
+- 📁 **Diff** against your model solution per file
 
-Vervolgens vul jij het cijfer in, exporteert een CSV en bent klaar.
+After that you fill in the grade, export a CSV, and you're done.
 
-### Welke opdrachten?
+### Which assignments?
 
-| Type | Wat | Bestanden |
+| Type | What | Files |
 |---|---|---|
-| **C#** | .NET-projecten, eindopdracht Programmeren | `.cs`, `.csproj` |
-| **Generic code** | Python, Java, C++, … | configureerbare extensies |
-| **Web** | HTML/CSS/JS/TS-projecten | `.html .css .js .ts` (negeert `node_modules/`, `dist/`) |
-| **SQL** | DDL/DML-opdrachten | `.sql` |
-| **Writing** | Schrijfopdrachten, verslagen, essays | `.md`, `.docx`, `.pdf` |
+| **C#** | .NET projects, final assignment Programming | `.cs`, `.csproj` |
+| **Generic code** | Python, Java, C++, … | configurable extensions |
+| **Web** | HTML/CSS/JS/TS projects | `.html .css .js .ts` (ignores `node_modules/`, `dist/`) |
+| **SQL** | DDL/DML assignments | `.sql` |
+| **Writing** | Writing assignments, reports, essays | `.md`, `.docx`, `.pdf` |
 
-Bij het openen van een nieuwe werkmap detecteert de tool het type en stelt het je voor; je bevestigt of kiest een ander type.
+When opening a new working folder, the tool detects the type and proposes it; you confirm or pick another type.
 
 ---
 
-## Installatie
+## Installation
 
-### Vereisten
+### Requirements
 
 - **Windows 10/11**
 - **.NET 10 SDK** — [download](https://dotnet.microsoft.com/download/dotnet/10.0)
-- Minstens één API-key voor een LLM-provider (zie hieronder)
+- At least one API key for an LLM provider (see below)
 
-### Installeren
+### Installing
 
-Via [releases](https://github.com/timdams/ConclaveRelease) kan je de recentste versie binnenhalen. Updates in de toekomst worden automatisch geinstalleerd.
+You can grab the latest version via [releases](https://github.com/timdams/ConclaveRelease). Future updates will install automatically.
 
-### API-keys configureren
+### Configuring API keys
 
-Conclave praat default met **OpenRouter** (één key, toegang tot 200+ modellen — Claude, GPT, Gemini, DeepSeek, …). Optioneel kun je ook directe Anthropic/OpenAI keys gebruiken.
+Conclave talks to **OpenRouter** by default (one key, access to 200+ models — Claude, GPT, Gemini, DeepSeek, …). Optionally you can also use direct Anthropic/OpenAI keys.
 
-Drie manieren, in volgorde van precedentie:
+Three ways, in order of precedence:
 
-1. **Via de tool zelf** *(aanbevolen)*: menu **App → App-instellingen…**, vul keys in, herstart. Bewaard in `%APPDATA%\Conclave\user-settings.json`.
-2. **Via `appsettings.local.json`** *(handig voor debug)*: kopieer in `src/Conclave.App/`, gitignored. Wint van app-instellingen.
-3. **Via environment variables**: `CONCLAVE_OPENROUTER__APIKEY`, `CONCLAVE_ANTHROPIC__APIKEY`, etc.
+1. **Through the tool itself** *(recommended)*: menu **App → App settings…**, fill in keys, restart. Stored in `%APPDATA%\Conclave\user-settings.json`.
+2. **Through `appsettings.local.json`** *(handy for debugging)*: copy into `src/Conclave.App/`, gitignored. Overrides app settings.
+3. **Through environment variables**: `CONCLAVE_OPENROUTER__APIKEY`, `CONCLAVE_ANTHROPIC__APIKEY`, etc.
 
-> 💡 **Gratis pilot-run?** Maak een OpenRouter-account aan en gebruik `:free`-modellen (DeepSeek, Qwen3-Coder, …) — geen kost. In de Council Editor staat een "alleen gratis"-filter.
+> 💡 **Free pilot run?** Create an OpenRouter account and use `:free` models (DeepSeek, Qwen3-Coder, …) — no cost. The Council Editor has a "free only" filter.
 
 ---
 
-## Een werkmap opzetten
+## Setting up a working folder
 
-Per opdracht heb je één werkmap met de student-folders erin. Conclave maakt een aparte `_conclave/`-folder ernaast voor alle tool-data; de student-folders blijven volledig onaangeraakt.
+For each assignment you have one working folder with the student folders inside it. Conclave creates a separate `_conclave/` folder alongside them for all tool data; the student folders remain completely untouched.
 
 ```
-2026-prog2-eindopdracht\
-├── _conclave\              ← Conclave schrijft hier alles
-├── Jansen_Pieter\          ← read-only bron
+2026-prog2-finalassignment\
+├── _conclave\              ← Conclave writes everything here
+├── Jansen_Pieter\          ← read-only source
 ├── DeSmet_Lara\
 └── VanDenBergh_Mohammed\
 ```
 
-### Eerste keer openen
+### Opening for the first time
 
-1. **App → Werkmap openen…** → wijs de bovenliggende folder aan
-2. **Type kiezen** — de tool stelt op basis van de inhoud een type voor (C# / Python / web / SQL / writing). Bevestig of kies anders.
-3. **Vul `_conclave/` in:**
-   - `opdracht.md` — opdrachtomschrijving
-   - `rubric.md` — criteria + gewichten
-   - `modeloplossing/` — jouw referentie-oplossing
-   - `students.json` — naam ↔ pseudoniem (tool maakt template)
-4. **Council samenstellen** — knop **Edit Council** opent een venster met live model-comparer (kost + kwaliteit + free-only filter). Aanbevolen: 3 leden uit verschillende modelfamilies.
+1. **App → Open working folder…** → point to the parent folder
+2. **Pick a type** — based on the contents the tool proposes a type (C# / Python / web / SQL / writing). Confirm or pick another.
+3. **Fill in `_conclave/`:**
+   - `opdracht.md` — assignment description
+   - `rubric.md` — criteria + weights
+   - `modeloplossing/` — your reference solution
+   - `students.json` — name ↔ pseudonym (the tool creates a template)
+4. **Compose the council** — the **Edit Council** button opens a window with a live model comparer (cost + quality + free-only filter). Recommended: 3 members from different model families.
 
-> ⚠️ **Belangrijk:** Bronfolders zijn **read-only** voor de tool. Conclave raakt nooit een student-bestand aan. Alle tool-data leeft in `_conclave/`. Je kunt veilig een student-folder vervangen bij heroplevering — je werk gaat niet verloren.
+> ⚠️ **Important:** Source folders are **read-only** to the tool. Conclave never touches a student file. All tool data lives in `_conclave/`. You can safely replace a student folder when a resubmission comes in — your work won't be lost.
 
 ---
 
-## Dagelijkse flow
+## Daily flow
 
 ### Dashboard
 
-Tabel met alle inzendingen, default gesorteerd op **spreiding (σ) aflopend** — daar zit jouw toegevoegde waarde.
+A table with all submissions, sorted by default on **spread (σ) descending** — that's where your added value sits.
 
-| Student | Status | Stage 1 | Camerlengo | σ | 🚩 | Mijn cijfer |
+| Student | Status | Stage 1 | Camerlengo | σ | 🚩 | My grade |
 |---|---|---|---|---|---|---|
 | VanDenBergh_M | analyzed | 11.7/20 | 11.2/20 | **3.2** 🔥⚫ | 4 | – |
 | Jansen_P | analyzed | 14.3/20 | 14.5/20 | 0.9 🔥⚪ | 1 | – |
 | DeSmet_L | judged | 15.0/20 | 15.1/20 | 0.5 🔥⚪ | 0 | 15.0 |
 
-**Acties:**
-- **Run stage 1 op alle pending** — elk lid analyseert onafhankelijk
-- **Run stage 2** — geanonimiseerde cross-review (wordt automatisch overgeslagen bij consensus)
-- **Run stage 3** — optionele Camerlengo-nota met meta-observaties + adviserend cijfer
-- **Exporteer cijfers (CSV)** — Excel-friendly export voor je administratie
+**Actions:**
+- **Run stage 1 on all pending** — each member analyzes independently
+- **Run stage 2** — anonymized cross-review (automatically skipped when there's consensus)
+- **Run stage 3** — optional Camerlengo note with meta-observations + advisory grade
+- **Export grades (CSV)** — Excel-friendly export for your admin
 
-### Project-view (per student)
+### Project view (per student)
 
-Split-screen met code-browser links (klikbare bevindingen springen naar de juiste regel), council-output rechts, en een **Diff-tab** tegen de modeloplossing.
+Split screen with a code browser on the left (clickable findings jump to the right line), council output on the right, and a **Diff tab** against the model solution.
 
-**Sneltoetsen:**
+**Shortcuts:**
 
-| Toets | Actie |
+| Key | Action |
 |---|---|
-| `J` / `K` | Vorige / volgende student |
-| `Enter` | Oordeel opslaan + door naar volgende |
-| `A` | Accept council-cijfer (alleen bij hoge consensus) |
-| `F` | Flag voor latere review |
-| `Ctrl+L` | Live log-paneel openen / sluiten |
-| `?` | Help-overlay |
+| `J` / `K` | Previous / next student |
+| `Enter` | Save judgment + move to next |
+| `A` | Accept council grade (only with high consensus) |
+| `F` | Flag for later review |
+| `Ctrl+L` | Open / close live log pane |
+| `?` | Help overlay |
 
-### Live observability tijdens een run
+### Live observability during a run
 
-Onderaan zit een inklapbaar log-paneel dat per call toont: stage, lid, model, latency, tokens, kost. Klikken op een regel opent het volledige transcript (system-prompt + user-prompt + response of error). Bij timeout / API-fout popt het paneel automatisch open.
-
----
-
-## Hoe werkt de council?
-
-Drie stages, met automatische skip-logica om kosten te besparen.
-
-**Stage 1 — First opinions.** Elk lid krijgt onafhankelijk: opdracht, rubric, modeloplossing, studentwerk. Output is markdown met cijfer, rubric-scores, rode vlaggen (met letterlijke snippets), en AI-vermoeden.
-
-**Stage 2 — Cross-review (geanonimiseerd).** Elk lid leest de andere antwoorden als Reviewer A/B/C en zoekt observaties die niet kloppen. **Wordt overgeslagen** als de cijfers dicht bij elkaar liggen (σ ≤ drempel) en geen high-severity vlaggen — bespaart kost op routine-cases.
-
-**Stage 3 — Camerlengo-nota (optioneel).** Een aparte chairman-AI levert meta-observaties ("waar is het meeste meningsverschil?", "wat zou je concreet moeten checken?") plus een eigen adviserend cijfer. Gewogen mix met de stage-1 cijfers verschijnt in de **Camerlengo**-kolom.
-
-> Witte rook 🔥⚪ = consensus, snelle review. Zwarte rook 🔥⚫ = zelf kijken.
+At the bottom there's a collapsible log pane that shows per call: stage, member, model, latency, tokens, cost. Clicking a line opens the full transcript (system prompt + user prompt + response or error). On timeout / API error the pane pops open automatically.
 
 ---
 
-## Privacy & veiligheid
+## How does the council work?
 
-- **Pseudonimisering**: studentnamen worden vervangen via `_conclave/students.json` vóór elke API-call. De UI toont gewoon de echte naam.
-- **Lokaal**: alle tool-data leeft op disk. Niets gaat naar de cloud. Wat naar OpenAI / Anthropic / OpenRouter gaat is uitsluitend de gepseudonimiseerde prompt op het moment van de call.
-- **Logbestanden** (`_conclave/analyses/<student>/log.jsonl`) bevatten alleen tokens/kost/latency — geen prompts of responses. Volledige prompts en responses staan in `transcripts/`-folder, leesbaar zonder de tool.
+Three stages, with automatic skip logic to save costs.
 
----
+**Stage 1 — First opinions.** Each member independently receives: assignment, rubric, model solution, student work. Output is markdown with grade, rubric scores, red flags (with literal snippets), and AI suspicion.
 
-## Wat als…
+**Stage 2 — Cross-review (anonymized).** Each member reads the other answers as Reviewer A/B/C and looks for observations that don't hold up. **Skipped** when grades are close together (σ ≤ threshold) and there are no high-severity flags — saves cost on routine cases.
 
-**…ik een student-folder vervang met een nieuwe inzending?** Bron-hash wijzigt → status wordt automatisch `stale`. Open de student in het dashboard en run opnieuw.
+**Stage 3 — Camerlengo note (optional).** A separate chairman AI delivers meta-observations ("where is the biggest disagreement?", "what should you concretely check?") plus its own advisory grade. A weighted mix with the stage-1 grades appears in the **Camerlengo** column.
 
-**…ik het opdracht-type wil veranderen achteraf?** Werkmap-instellingen → "Opdracht-type wijzigen…". Reeds geanalyseerde inzendingen worden automatisch als `stale` gemarkeerd.
-
-**…een API-call timeout-t of faalt?** Default 3-min deadline per call. De tool schrijft een failure-transcript zodat je achteraf ziet waarom het misging. Andere council-leden gaan gewoon door — één hangend lid blokkeert nooit de hele stapel.
-
-**…ik geen `council.json` heb?** De tool valt terug op een default (1 lid). Je krijgt een duidelijke waarschuwing met provider + model voordat er ook maar één API-call gaat. Drie opties: doorgaan / Council Editor openen / annuleren.
-
-**…ik geen modeloplossing heb?** De tool weigert te starten ("Sede vacante"-melding). Vul `_conclave/modeloplossing/` aan en herlaad.
+> White smoke 🔥⚪ = consensus, quick review. Black smoke 🔥⚫ = look yourself.
 
 ---
 
-## Folder-structuur na een run
+## Privacy & security
+
+- **Pseudonymization**: student names are replaced via `_conclave/students.json` before every API call. The UI just shows the real name.
+- **Local**: all tool data lives on disk. Nothing goes to the cloud. What goes to OpenAI / Anthropic / OpenRouter is exclusively the pseudonymized prompt at the moment of the call.
+- **Log files** (`_conclave/analyses/<student>/log.jsonl`) only contain tokens/cost/latency — no prompts or responses. Full prompts and responses live in the `transcripts/` folder, readable without the tool.
+
+---
+
+## What if…
+
+**…I replace a student folder with a new submission?** Source hash changes → status automatically becomes `stale`. Open the student in the dashboard and run again.
+
+**…I want to change the assignment type after the fact?** Working folder settings → "Change assignment type…". Already-analyzed submissions are automatically marked `stale`.
+
+**…an API call times out or fails?** Default 3-minute deadline per call. The tool writes a failure transcript so you can see afterwards why it went wrong. Other council members just continue — one hanging member never blocks the whole stack.
+
+**…I don't have a `council.json`?** The tool falls back to a default (1 member). You get a clear warning with provider + model before a single API call goes out. Three options: continue / open Council Editor / cancel.
+
+**…I don't have a model solution?** The tool refuses to start ("Sede vacante" message). Fill in `_conclave/modeloplossing/` and reload.
+
+---
+
+## Folder structure after a run
 
 ```
 _conclave/
-├── .conclave-config.json       ← markeert dit als werkmap, opdracht-type
+├── .conclave-config.json       ← marks this as working folder, assignment type
 ├── opdracht.md, rubric.md
-├── council.json                ← council-configuratie
-├── modeloplossing/             ← jouw referentie
-├── prompts/                    ← stage-prompts (aanpasbaar)
-├── students.json               ← naam ↔ pseudoniem
-├── extracted/                  ← gecachte tekst-extractie (.docx/.pdf → .md)
+├── council.json                ← council configuration
+├── modeloplossing/             ← your reference
+├── prompts/                    ← stage prompts (editable)
+├── students.json               ← name ↔ pseudonym
+├── extracted/                  ← cached text extraction (.docx/.pdf → .md)
 ├── analyses/Jansen_Pieter/
 │   ├── council/
-│   │   ├── 01-first-opinions/   ← stage 1 markdown per lid
-│   │   ├── 02-cross-review/     ← stage 2 (anoniem)
+│   │   ├── 01-first-opinions/   ← stage 1 markdown per member
+│   │   ├── 02-cross-review/     ← stage 2 (anonymous)
 │   │   ├── 03-chairman-sidenote.md
 │   │   └── transcripts/         ← per call: prompts + response + meta
 │   ├── tim-oordeel.md
-│   ├── metadata.json            ← hash, status, cijfer
-│   └── log.jsonl                ← tokens/kost/latency
-└── runs/                        ← cross-project rapporten (M4)
+│   ├── metadata.json            ← hash, status, grade
+│   └── log.jsonl                ← tokens/cost/latency
+└── runs/                        ← cross-project reports (M4)
 ```
 
-Alles markdown / JSON op disk. Leesbaar zonder de tool. Git-baar. Grep-baar.
+Everything markdown / JSON on disk. Readable without the tool. Git-friendly. Grep-friendly.
 
 ---
 
-## Harde principes
+## Hard principles
 
-1. **Bronfolders zijn read-only.** De tool schrijft uitsluitend in `_conclave/`.
-2. **Geen AI bepaalt het bindende eindoordeel.** De council geeft advies; jij beslist.
-3. **Pseudonimisering vóór elke API-call.**
-4. **Markdown is de waarheid.** Alle resultaten leesbaar zonder de tool.
-
----
-
+1. **Source folders are read-only.** The tool writes exclusively in `_conclave/`.
+2. **No AI determines the binding final judgment.** The council advises; you decide.
+3. **Pseudonymization before every API call.**
+4. **Markdown is the truth.** All results readable without the tool.
 
 ---
 
-## Terminologie
+
+---
+
+## Terminology
 
 | Concept | Term |
 |---|---|
-| Council-lid | Cardinal |
-| Stage-1-ronde | Ballotage |
-| Consensus, geen vlaggen | Witte rook 🔥⚪ |
-| Conflict / hoge spreiding | Zwarte rook 🔥⚫ |
-| Oordeel opgeslagen | Habemus iudicium |
-| Stapel afgerond | Habemus papam |
-| Werkmap zonder modeloplossing | Sede vacante |
-| AI-chairman-nota | Camerlengo-nota |
-
+| Council member | Cardinal |
+| Stage-1 round | Ballotage |
+| Consensus, no flags | White smoke 🔥⚪ |
+| Conflict / high spread | Black smoke 🔥⚫ |
+| Judgment saved | Habemus iudicium |
+| Stack completed | Habemus papam |
+| Working folder without model solution | Sede vacante |
+| AI chairman note | Camerlengo note |
